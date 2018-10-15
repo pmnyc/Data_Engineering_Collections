@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!-- saved from url=(0077)https://medium.com/media/56066ba7f262da56e93bb4d9c9a55d29?postId=9c9fbbdc46cc -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Cythonized Version of Recos – Medium</title><meta name="description" content="Cythonized Version of Recos"><meta name="twitter:widgets:csp" content="on"><meta name="robots" content="noindex"><!--<base target="_blank">--><base href="." target="_blank"><style>body {text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-family: "ff-tisa-web-pro", Georgia, Cambria, "Times New Roman", Times, serif; font-weight: 400; color: #333332; font-size: 18px; line-height: 1.4; margin: 0; background-color: white; overflow: hidden;}iframe {max-width: 100%;}</style></head><body><style>.gist .gist-file { margin-bottom: 0 !important; }.gist { text-rendering: auto; }</style><script src="./bcd4a74e6866cfc6ce4a9574d093df2e.js" charset="utf-8"></script><link rel="stylesheet" href="./gist-embed-2c768148c4d27cab10fe818942078e18.css"><div id="gist84070262" class="gist">
+    <div class="gist-file">
+      <div class="gist-data">
+        <div class="js-gist-file-update-container js-task-list-container file-box">
+  <div id="file-example_dataproc_twitter_cython-py" class="file">
+    
+
+  <div itemprop="text" class="blob-wrapper data type-python ">
+      <table class="highlight tab-size js-file-line-container" data-tab-size="8">
+      <tbody><tr>
+        <td id="file-example_dataproc_twitter_cython-py-L1" class="blob-num js-line-number" data-line-number="1"></td>
+        <td id="file-example_dataproc_twitter_cython-py-LC1" class="blob-code blob-code-inner js-file-line"><span class="pl-k">from</span> cpython cimport <span class="pl-c1">dict</span>, <span class="pl-c1">list</span></td>
+      </tr>
+      <tr>
+        <td id="file-example_dataproc_twitter_cython-py-L2" class="blob-num js-line-number" data-line-number="2"></td>
+        <td id="file-example_dataproc_twitter_cython-py-LC2" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-example_dataproc_twitter_cython-py-L3" class="blob-num js-line-number" data-line-number="3"></td>
+        <td id="file-example_dataproc_twitter_cython-py-LC3" class="blob-code blob-code-inner js-file-line">
+</td>
+      </tr>
+      <tr>
+        <td id="file-example_dataproc_twitter_cython-py-L4" class="blob-num js-line-number" data-line-number="4"></td>
+        <td id="file-example_dataproc_twitter_cython-py-LC4" class="blob-code blob-code-inner js-file-line">cpdef cy_aggregate_scores(<span class="pl-c1">list</span> similarities, <span class="pl-c1">dict</span> user_scores, <span class="pl-c1">int</span> <span class="pl-v">n</span><span class="pl-k">=</span><span class="pl-c1">10</span>):</td>
+      </tr>
+      <tr>
+        <td id="file-example_dataproc_twitter_cython-py-L5" class="blob-num js-line-number" data-line-number="5"></td>
+        <td id="file-example_dataproc_twitter_cython-py-LC5" class="blob-code blob-code-inner js-file-line">    cdef <span class="pl-c1">int</span> i</td>
+      </tr>
+      <tr>
+        <td id="file-example_dataproc_twitter_cython-py-L6" class="blob-num js-line-number" data-line-number="6"></td>
+        <td id="file-example_dataproc_twitter_cython-py-LC6" class="blob-code blob-code-inner js-file-line">    cdef <span class="pl-c1">dict</span> res</td>
+      </tr>
+      <tr>
+        <td id="file-example_dataproc_twitter_cython-py-L7" class="blob-num js-line-number" data-line-number="7"></td>
+        <td id="file-example_dataproc_twitter_cython-py-LC7" class="blob-code blob-code-inner js-file-line">    cdef <span class="pl-c1">int</span> j</td>
+      </tr>
+      <tr>
+        <td id="file-example_dataproc_twitter_cython-py-L8" class="blob-num js-line-number" data-line-number="8"></td>
+        <td id="file-example_dataproc_twitter_cython-py-LC8" class="blob-code blob-code-inner js-file-line">    cdef double weight</td>
+      </tr>
+      <tr>
+        <td id="file-example_dataproc_twitter_cython-py-L9" class="blob-num js-line-number" data-line-number="9"></td>
+        <td id="file-example_dataproc_twitter_cython-py-LC9" class="blob-code blob-code-inner js-file-line">    res <span class="pl-k">=</span> {}</td>
+      </tr>
+      <tr>
+        <td id="file-example_dataproc_twitter_cython-py-L10" class="blob-num js-line-number" data-line-number="10"></td>
+        <td id="file-example_dataproc_twitter_cython-py-LC10" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">for</span> i <span class="pl-k">in</span> <span class="pl-c1">range</span>(<span class="pl-c1">len</span>(similarities)):</td>
+      </tr>
+      <tr>
+        <td id="file-example_dataproc_twitter_cython-py-L11" class="blob-num js-line-number" data-line-number="11"></td>
+        <td id="file-example_dataproc_twitter_cython-py-LC11" class="blob-code blob-code-inner js-file-line">        inters_i <span class="pl-k">=</span> similarities[i]</td>
+      </tr>
+      <tr>
+        <td id="file-example_dataproc_twitter_cython-py-L12" class="blob-num js-line-number" data-line-number="12"></td>
+        <td id="file-example_dataproc_twitter_cython-py-LC12" class="blob-code blob-code-inner js-file-line">        weight <span class="pl-k">=</span> user_scores[inters_i[<span class="pl-s"><span class="pl-pds">'</span>id<span class="pl-pds">'</span></span>]]</td>
+      </tr>
+      <tr>
+        <td id="file-example_dataproc_twitter_cython-py-L13" class="blob-num js-line-number" data-line-number="13"></td>
+        <td id="file-example_dataproc_twitter_cython-py-LC13" class="blob-code blob-code-inner js-file-line">        scores <span class="pl-k">=</span> inters_i[<span class="pl-s"><span class="pl-pds">'</span>scores<span class="pl-pds">'</span></span>]</td>
+      </tr>
+      <tr>
+        <td id="file-example_dataproc_twitter_cython-py-L14" class="blob-num js-line-number" data-line-number="14"></td>
+        <td id="file-example_dataproc_twitter_cython-py-LC14" class="blob-code blob-code-inner js-file-line">        items <span class="pl-k">=</span> inters_i[<span class="pl-s"><span class="pl-pds">'</span>items<span class="pl-pds">'</span></span>]</td>
+      </tr>
+      <tr>
+        <td id="file-example_dataproc_twitter_cython-py-L15" class="blob-num js-line-number" data-line-number="15"></td>
+        <td id="file-example_dataproc_twitter_cython-py-LC15" class="blob-code blob-code-inner js-file-line">        <span class="pl-k">for</span> j <span class="pl-k">in</span> <span class="pl-c1">range</span>(<span class="pl-c1">len</span>(items)):</td>
+      </tr>
+      <tr>
+        <td id="file-example_dataproc_twitter_cython-py-L16" class="blob-num js-line-number" data-line-number="16"></td>
+        <td id="file-example_dataproc_twitter_cython-py-LC16" class="blob-code blob-code-inner js-file-line">            sku <span class="pl-k">=</span> items[j]</td>
+      </tr>
+      <tr>
+        <td id="file-example_dataproc_twitter_cython-py-L17" class="blob-num js-line-number" data-line-number="17"></td>
+        <td id="file-example_dataproc_twitter_cython-py-LC17" class="blob-code blob-code-inner js-file-line">            res.setdefault(sku, <span class="pl-c1">0.0</span>)</td>
+      </tr>
+      <tr>
+        <td id="file-example_dataproc_twitter_cython-py-L18" class="blob-num js-line-number" data-line-number="18"></td>
+        <td id="file-example_dataproc_twitter_cython-py-LC18" class="blob-code blob-code-inner js-file-line">            res[sku] <span class="pl-k">+=</span> weight <span class="pl-k">*</span> scores[j]</td>
+      </tr>
+      <tr>
+        <td id="file-example_dataproc_twitter_cython-py-L19" class="blob-num js-line-number" data-line-number="19"></td>
+        <td id="file-example_dataproc_twitter_cython-py-LC19" class="blob-code blob-code-inner js-file-line">    <span class="pl-k">return</span>  res.items()</td>
+      </tr>
+</tbody></table>
+
+
+  </div>
+
+  </div>
+</div>
+
+      </div>
+      <div class="gist-meta">
+        <a href="https://gist.github.com/WillianFuks/bcd4a74e6866cfc6ce4a9574d093df2e/raw/db63f8ba9d19c9c36c7ce978c4000bdbc5821458/example_dataproc_twitter_cython.py" style="float:right">view raw</a>
+        <a href="https://gist.github.com/WillianFuks/bcd4a74e6866cfc6ce4a9574d093df2e#file-example_dataproc_twitter_cython-py">example_dataproc_twitter_cython.py</a>
+        hosted with ❤ by <a href="https://github.com/">GitHub</a>
+      </div>
+    </div>
+</div>
+<script>var height = -1; var delayMs = 200;function notifyResize(height) {height = height ? height : document.documentElement.offsetHeight; var resized = false; if (window.donkey && donkey.resize) {donkey.resize(height); resized = true;}if (parent && parent._resizeIframe) {var obj = {iframe: window.frameElement, height: height}; parent._resizeIframe(obj); resized = true;}if (window.location && window.location.hash === "#amp=1" && window.parent && window.parent.postMessage) {window.parent.postMessage({sentinel: "amp", type: "embed-size", height: height}, "*");}if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.resize) {window.webkit.messageHandlers.resize.postMessage(height); resized = true;}return resized;}function maybeResize() {if (document.documentElement.offsetHeight != height && notifyResize()) {height = document.documentElement.offsetHeight;}delayMs = Math.min(delayMs * 2, 1000000); setTimeout(maybeResize, delayMs);}maybeResize();</script></body></html>
