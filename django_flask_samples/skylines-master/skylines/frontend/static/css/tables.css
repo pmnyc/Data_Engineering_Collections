@@ -1,0 +1,94 @@
+table .numeric {
+  text-align:right;
+}
+
+table .date, table .times {
+  white-space: nowrap;
+}
+
+.table-condensed .column-buttons {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.table .column-buttons .btn {
+  margin: -5px 0;
+}
+
+.table-condensed .column-buttons .btn {
+  margin: -3px 0;
+}
+
+#flight-table .column-buttons {
+  white-space: nowrap;
+  text-align: right;
+}
+
+#flight-table .num_comments {
+  width: 0px;
+  vertical-align: middle;
+}
+
+#flight-table .not_published {
+  font-style: italic;
+}
+
+.table-flight-details {
+  margin-top: 10px;
+}
+
+.right th {
+  text-align: right;
+  padding-right: 0.5em;
+}
+
+.table .progress {
+  margin-bottom: inherit;
+}
+
+table.vmiddle td {
+  vertical-align: middle;
+}
+
+.table input, .table select {
+  margin: 0px;
+  width: 100%;
+}
+
+.table tr.selected td, .table tr.selected:hover td {
+  background-color: #eee !important;
+}
+
+table thead .sorting span {
+  display: block;
+}
+
+table thead .sorting a {
+  cursor: pointer;
+  padding-left: 18px;
+  text-decoration: none;
+  color: black;
+  display: block;
+}
+
+table thead .sorting .sorting_default {
+  background: url("../images/sort_both.png") no-repeat scroll left center transparent;
+}
+
+table thead .sorting .sorting_asc {
+  background: url("../images/sort_asc.png") no-repeat scroll left center transparent;
+}
+
+table thead .sorting .sorting_desc {
+  background: url("../images/sort_desc.png") no-repeat scroll left center transparent;
+}
+
+.airspace-table .name {
+  text-align: left;
+}
+
+.airspace-table .class,
+.airspace-table .base,
+.airspace-table .top {
+  text-align: center;
+}

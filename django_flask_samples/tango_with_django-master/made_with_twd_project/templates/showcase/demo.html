@@ -1,0 +1,105 @@
+{% extends 'showcase/base.html' %}
+
+
+{% block body_block %}
+    <div class="row">
+        <div class="callout panel">
+            <div class="row">
+
+                <div class="large-9 columns">
+                     <h1><a href="{{demo.url}}" target="_blank">{{ demo.name }}</a></h1>
+                     <h3>{{demo.tagline}}</h3>
+
+                    <h5>Created by: <a href="/showcase/team/{{team.id}}/">{{team.name}}</a></h5>
+                    Category: <a href="/showcase/cats/{{demo.category.id}}/">{{ demo.category.name }}</a><br/><br/>
+
+                    Average Rating:
+                    {% include 'showcase/rating_score.html' %}
+
+<br/>
+
+                </div>
+                <div class="large-3 columns">
+                    <a class="th" href="{{d.url}}">
+                    {% if demo.screenshot %}
+                        <img width="256" height="256" src="/media/{{demo.screenshot}}" alt="{{demo.name}}" />
+                    {% else %}
+                         <img width="256" height="256" src="http://lorempixel.com/256/{{demo.id|add:256}}/technics/" />
+                    {% endif %}
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="large-12 columns">
+                    <p>{{demo.description}} <br/>
+
+                    <a href="{{demo.url}}" target="_blank"> {{demo.url}}</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+
+            <div class="panel">
+                <h4>Comments</h4>
+                {% if ratings %}
+                {% for r in ratings %}
+                <div class="row">
+                    <div class ="large-1 columns">
+                    {% if r.score > 4 %}
+                    <span class="label success round">{{r.score}}</span>
+                    {% else %}
+                    <span class="label alert round">{{r.score}}</span>
+                    {% endif %}
+                    </div>
+                    <div class ="large-11 columns">
+
+                    <p>{{r.comment}} <br/> by {{r.rater.user.username}}</p>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p>
+                    There are no comments at present. Login or Register to add comments.
+                </p>
+                {% endif %}
+            </div>
+
+    </div>
+
+    {% if can_rate %}
+    <div class="row">
+
+             <div class="panel">
+                <h4>Rate this Demo</h4>
+                    <form id="user_form" method="post" action="/showcase/demo/rate/{{demo.id}}/"
+                        enctype="multipart/form-data">
+
+                    {% csrf_token %}
+                    <div class="row">
+
+                        <div class="large-12 columns">
+                            <label>Please enter your comments about the application</label>
+                                {{rate_form.comment.errors}}
+                                {{rate_form.comment}}
+                            <label>Please score this application</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="large-3 columns">
+                            {{rate_form.score.errors}}
+                            {{rate_form.score}}
+                        </div>
+                    </div>
+                    <input class="button tiny" type="submit" name="submit" value="Rate it" />
+                </form>
+            </div>
+    </div>
+        {% endif %}
+
+
+
+
+{% endblock %}

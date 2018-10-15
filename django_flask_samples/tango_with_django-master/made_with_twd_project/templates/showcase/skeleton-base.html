@@ -1,0 +1,45 @@
+{% load static %}
+
+{% load showcase_extras %}
+
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Showcase</title>
+    </head>
+
+    <body>
+        <div>
+            <h1><a href="/showcase/">ShowCase</a></h1>
+            {% if user.is_authenticated %}
+                Hello {{ user.username }}! |
+                {% if isteam %}
+                    <a href="/showcase/team/{{team.id}}/">Profile</a> |
+                {% endif %}
+
+            <a href="/showcase/logout/">Sign Out</a>
+            {% else %}
+                <a href="/showcase/login/">Login</a> | <a href="/showcase/register/">Register</a>
+            {% endif %}
+        </div>
+
+        <div>
+            {% block body_block %}{% endblock %}
+        </div>
+
+        <div>
+
+        <div>
+            {% get_category_list %}
+        </div>
+            {% block side_block %}{% endblock %}
+        <div>
+
+        <div>
+            {% block footer_block %}{% endblock %}
+        <div>
+
+    </body>
+
+</html>

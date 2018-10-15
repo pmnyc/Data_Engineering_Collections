@@ -1,0 +1,90 @@
+{% extends 'showcase/base.html' %}
+
+{% block body_block %}
+    <div class="row">
+        <h2>{% if cat %} {{cat.name}} {% endif %} Demos</h2>
+        {% if hero %}
+        <div class="callout panel">
+            <div class="row">
+                <div class="large-4 columns">
+                    <a class="th" href="/showcase/demo/show/{{hero.id}}/">
+                    {% if hero.screenshot %}
+                        <img width="256" height="256" src="/media/{{hero.screenshot}}" alt="{{hero.name}}" />
+                    {% else %}
+                        <img width="256" height="256" src="http://lorempixel.com/256/256/abstract/" />
+                    {% endif %}
+                    </a>
+                </div>
+                <div class="large-8 columns">
+                    <h2><a href="/showcase/demo/show/{{hero.id}}/">{{ hero.name }}</a> </h2>
+                    <h3>{{hero.tagline}}</h3>
+                    <h4>{{hero.description|truncatewords:20}}</h4>
+                    <h4>Created by: <a href="/showcase/team/{{hero.team.id}}/">{{hero.team.name}}</a></h4>
+                    {% if hero.rating_count > 0 %}
+                        {% if hero.rating_average > 4 %}
+                            <span class="label success round">{{hero.rating_average}}</span>
+                        {% else %}
+                            <span class="label alert round">{{hero.rating_average}}</span>
+                        {% endif %}
+                    {% else %}
+                            <span class="label  round">Unrated</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="panel">
+            {% if demos %}
+                    {% for demo in demos %}
+                    {% cycle '<div class="row">' '' %}
+                        <div class="large-6 columns">
+                            <div class="row">
+                                <div class="large-4 columns">
+                                <a class="th" href="/showcase/demo/show/{{demo.id}}/">
+                                {% if demo.screenshot %}
+                                    <img src="/media/{{demo.screenshot}}" width="196" height="196" alt="{{demo.name}}" />
+                                {% else %}
+                                    <img width="196" height="196" src="http://lorempixel.com/196/{{demo.id|add:196}}/abstract/" />
+                                {% endif %}
+                                </a>
+
+                                </div>
+                                <div class="large-8 columns">
+                                    <h5>
+                                    <a href="/showcase/demo/show/{{demo.id}}/">{{ demo.name }}</a>
+                                   </h5>
+                                    <h6>{{demo.tagline}}</h6>
+                                    <h6>Created by: <a href="/showcase/team/{{demo.team.id}}/">{{demo.team.name}}</a></h6>
+                                    {% include 'showcase/rating_score.html' %}
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                    {% cycle '' '</div><hr />' %}
+                    {% endfor %}
+                {% else %}
+                    {% if hero %}
+                    <strong></strong>
+                    {% else %}
+                    <strong>There are no demos present.</strong>
+                    {% endif %}
+                {% endif %}
+
+
+
+        </div>
+
+
+
+
+
+
+    </div>
+{% endblock %}
+
+
+
+

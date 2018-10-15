@@ -1,0 +1,263 @@
+{% from "macros/datetime.jinja" import insert_timeago_date, timeago_script with context %}
+{% from "macros/links.jinja" import club_link %}
+
+{% extends "base-page.jinja" %}
+{% set active_page = "settings" %}
+
+{% block title %}{{ g.user|e }}{% endblock %}
+
+
+{% macro add_locations(locations) -%}
+{% for location in locations -%}
+[{{ location.longitude }}, {{ location.latitude }}]{% if not loop.last %},{% endif %}
+{%- endfor %}
+{%- endmacro %}
+
+
+{% block styles -%}
+{{ super() }}
+
+{% if takeoff_locations -%}
+{% assets 'openlayers_css' -%}
+<link href="{{ ASSET_URL }}" rel="stylesheet" type="text/css" />
+{%- endassets %}
+{%- endif %}
+{%- endblock %}
+
+
+{% block scripts -%}
+{{ super() }}
+
+{% if takeoff_locations -%}
+{% assets 'openlayers_js' -%}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{%- endassets %}
+
+<script type="text/javascript">
+  $(function() {
+    if (!isCanvasSupported()) {
+      $("#map_canvas").html('<b>Your browser is too old to display this map.<br />' +
+                            'Please update to a current version.</b>');
+      return;
+    }
+
+    var sl_map =
+      new slMap("map_canvas",
+                "{{ config.get('SKYLINES_MAP_TILE_URL') }}",
+                { {% if 'baselayer' in request.args %}'base_layer': '{{ request.args['baselayer'] }}',{% endif %}{% if 'overlays' in request.args %}'overlay_layers': '{{ request.args['overlays'] }}',{% endif %} });
+
+    var map = sl_map.getMap();
+
+    sl_map.addBingLayers("{{ config.get('SKYLINES_BING_API_KEY', 'null') }}");
+    sl_map.addMapboxLayer("{{ config.get('SKYLINES_MAPBOX_API_KEY', 'null') }}");
+
+    var vector_source = new ol.source.Vector({
+      features: []
+    });
+
+    var vector_layer = new ol.layer.Vector({
+      source: vector_source,
+      display_in_layer_switcher: false,
+      zIndex: 51,
+      name: 'Takeoff Locations',
+      id: 'TakeoffLocations'
+    });
+
+    map.addLayer(vector_layer);
+
+    var icon_style = new ol.style.Style({
+      image: new ol.style.Icon(({
+        anchor: [0.5, 1],
+        anchorXUnits: 'fraction',
+        anchorYUnits: 'fraction',
+        src: '/vendor/openlayers/img/marker-gold.png'
+      }))
+    });
+
+    var locations = [{{ add_locations(takeoff_locations) }}];
+    for (var i = 0; i < locations.length; ++i) {
+      var feature = new ol.Feature({
+        geometry: new ol.geom.Point(ol.proj.transform(locations[i], 'EPSG:4326', 'EPSG:3857'))
+      });
+
+      feature.setStyle(icon_style);
+
+      vector_source.addFeature(feature);
+    }
+
+    map.getView().fit(vector_source.getExtent(), map.getSize());
+    var zoom = map.getView().getZoom();
+    if (zoom > 10)
+      map.getView().setZoom(10);
+
+    var map_click_handler = slMapClickHandler(map, null, {
+      flight_info: false,
+      location_info: true,
+      api_url: "{{ config.get('SKYLINES_API_URL') }}"
+    });
+  });
+</script>
+{%- endif %}
+
+{{ timeago_script() }}
+{%- endblock %}
+
+
+{%- block content %}
+<div itemscope="" itemtype="https://schema.org/Person">
+  <meta itemprop="url" content="{{ url_for('.index', _external=True) }}" />
+  <div class="row">
+    <div class="well col-md-8 col-md-offset-2">
+      <table class="right">
+        {% if g.user.is_readable(g.current_user) -%}
+        <tr>
+          <th>{% trans %}Email{% endtrans %}</th>
+          <td itemprop="email">{{ g.user.email_address }}</td>
+        </tr>
+        {%- endif %}
+
+        <tr>
+          <th>{% trans %}Name{% endtrans %}</th>
+          <td itemprop="name">{{ g.user.name }}</td>
+        </tr>
+
+        {% if g.user.club or g.user.is_writable(g.current_user) -%}
+        <tr>
+          <th>{% trans %}Club{% endtrans %}</th>
+
+          {% if g.user.club -%}
+          <td itemprop="memberof" itemscope="" itemtype="https://schema.org/SportsTeam">
+            <meta itemprop="url" content="{{ url_for('club.index', club_id=g.user.club_id, _external=True) }}" />
+            {{ club_link(g.user.club, ' itemprop="name"') }}
+          {%- else %}
+          <td>
+            [{% trans %}Unspecified{% endtrans %}]
+          {%- endif %}
+
+            {% if g.user.is_writable(g.current_user) -%}
+            <a href="{{ url_for('settings.club', user=(g.current_user != g.user and g.user_id or None)) }}" class="btn btn-default btn-sm">{% trans %}Change{% endtrans %}</a>
+            {%- endif %}
+          </td>
+        </tr>
+        {%- endif %}
+
+        {% if g.user.followers -%}
+        <tr>
+          <th>{{ _('Followers') }}</th>
+          <td>
+            <a href="{{ url_for('user.followers') }}">{{ ngettext('%(num)d pilot', '%(num)d pilots', g.user.followers|count) }}</a>
+          </td>
+        </tr>
+        {%- endif %}
+
+        {% if g.user.following -%}
+        <tr>
+          <th>{{ _('Following') }}</th>
+          <td>
+            <a href="{{ url_for('user.following') }}">{{ ngettext('%(num)d pilot', '%(num)d pilots', g.user.following|count) }}</a>
+          </td>
+        </tr>
+        {%- endif %}
+      </table>
+
+      <p style="margin-top: 10px">
+        {% if g.user.is_writable(g.current_user) -%}
+        <a href="{{ url_for('settings.profile', user=(g.current_user != g.user and g.user_id or None)) }}" class="btn btn-default"><i class="icon-cog"></i> {% trans %}Settings{% endtrans %}</a>
+        {%- endif %}
+
+        {% if g.current_user and g.current_user != g.user -%}
+          {% if g.current_user.follows(g.user) -%}
+            <a href="{{ url_for('.unfollow') }}" class="btn btn-default">{% trans %}Unfollow{% endtrans %}</a>
+          {%- else %}
+            <a href="{{ url_for('.follow') }}" class="btn btn-default">{% trans %}Follow{% endtrans %}</a>
+          {%- endif %}
+        {%- endif %}
+
+        <a href="{{ url_for('flights.pilot', id=g.user.id) }}" class="btn btn-default"><i class="icon-plane"></i> {% trans %}Flights{% endtrans %}</a>
+        <a href="{{ url_for('statistics.index', page='pilot', id=g.user.id) }}" class="btn btn-default"><i class="icon-bar-chart"></i> {% trans %}Statistics{% endtrans %}</a>
+        <a href="{{ url_for('timeline.index', user=g.user.id) }}" class="btn btn-default"><i class="icon-time"></i> {{ _('Timeline') }}</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    {% if distance_flights -%}
+    <div class="col-sm-6 col-md-4 col-md-offset-2">
+      <h2>{% trans %}Distance Flights{% endtrans %}</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>{% trans %}Distance{% endtrans %}</th>
+            <th>{% trans %}Date{% endtrans %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for distance_flight in distance_flights -%}
+          <tr>
+            <td>{{ h.format_distance(distance_flight[0]) }}</td>
+            <td class="column-buttons">
+              {% if distance_flight[1] -%}
+              {{ insert_timeago_date(distance_flight[1].landing_time) }}
+              <div class="pull-right">
+                <a href="{{ url_for('flight.index', flight_id=distance_flight[1].id) }}" class="btn btn-default btn-sm">Show</a>
+              </div>
+              {%- endif %}
+            </td>
+          </tr>
+          {%- endfor %}
+        </tbody>
+      </table>
+    </div>
+    {%- endif %}
+
+    {% if last_year_statistics and last_year_statistics.flights > 0 -%}
+    <div class="col-sm-6 col-md-4">
+      <h2>{% trans %}Last 12 Months{% endtrans %}</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th colspan="2">&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>{% trans %}Flights{% endtrans %}</strong></td>
+            <td>{{ h.format_number(last_year_statistics.flights) }}</td>
+          </tr>
+          <tr>
+            <td><strong>{% trans %}Distance{% endtrans %}</strong></td>
+            <td>
+              <span rel="tooltip" title="{{ _('avg. %(distance)s per flight', distance=h.format_distance(last_year_statistics.average_distance)) }}">
+                {{ h.format_distance(last_year_statistics.distance) }}
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>{% trans %}Flight Time{% endtrans %}</strong></td>
+            <td>
+              <span rel="tooltip" title="{{ _('avg. %(hours)s hours per flight', hours=h.format_timedelta(last_year_statistics.average_duration)) }}">
+                {{ _('%(hours)s Hours', hours=h.format_timedelta(last_year_statistics.duration)) }}
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>{% trans %}Average Speed{% endtrans %}</strong></td>
+            <td>{{ h.format_speed(last_year_statistics.speed) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    {%- endif %}
+  </div>
+
+  {% if takeoff_locations -%}
+  <div class="row">
+    <div class="col-md-12">
+      <h2>{% trans %}Takeoff Locations{% endtrans %}</h2>
+      <div id="map_canvas" style="width:100%; height:533px;"></div>
+    </div>
+  </div>
+  {%- endif %}
+  </div>
+</div>
+{%- endblock %}

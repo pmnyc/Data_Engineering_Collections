@@ -1,0 +1,9 @@
+{% if demo.rating_count > 0 %}
+       {% if demo.rating_average > 4 %}
+            <span class="label success round">{{demo.rating_average}}</span>
+       {% else %}
+            <span class="label alert round">{{demo.rating_average}}</span>
+       {% endif %}
+{% else %}
+    <span class="label round">Unrated</span>
+{% endif %}

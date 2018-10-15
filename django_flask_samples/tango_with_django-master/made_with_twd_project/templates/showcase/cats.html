@@ -1,0 +1,15 @@
+<h4>Category</h4>
+{% if cats %}
+   <ul class="side-nav">
+            {% for c in cats %}
+                {% if c.id == catid|add:0 %}
+                    <li class="warning active"><a href="/showcase/cats/{{c.id}}/">{{ c.name }}</a></li>
+                {% else %}
+
+                    <li class="warning"><a href="/showcase/cats/{{c.id}}/">{{ c.name }}</a></li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        {% else %}
+            <strong >There are no category present.</strong>
+        {% endif %}

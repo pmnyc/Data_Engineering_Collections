@@ -1,0 +1,25 @@
+{% extends 'showcase/base.html' %}
+
+{% block body_block %}
+    <div class="row">
+        <h2>Rater Registration Form</h2>
+        <div class="callout panel">
+            <div class="row">
+                <div class="large-8 columns">
+                {% if registered %}
+                    <strong>Thank you for registering!</strong>
+                    <a href="/showcase/">Return to the homepage.</a><br />
+                {% else %}
+                    <strong>Please enter the following details to register as a rater.</strong><br />
+                    <form id="user_form" method="post" action="/showcase/register/rater/"
+                            enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ user_form.as_p }}
+                        <input class="button tiny" type="submit" name="submit" value="Register" />
+                    </form>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

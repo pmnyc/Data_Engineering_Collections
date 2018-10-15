@@ -1,0 +1,78 @@
+SYMBOL
+  NAME 'filled'
+  TYPE vector
+  POINTS
+    0 5
+    0 10
+  END
+END
+
+SYMBOL
+  NAME 'filled-small'
+  TYPE vector
+  POINTS
+    0 2
+    0 4
+  END
+END
+
+SYMBOL
+  NAME 'dashed'
+  TYPE vector
+  POINTS
+    0 5
+    5 10
+  END
+END
+
+SYMBOL
+  NAME 'dashed-small'
+  TYPE vector
+  POINTS
+    0 5
+    5 7
+  END
+END
+
+SYMBOL
+  NAME 'airport'
+  TYPE pixmap
+  IMAGE 'airports/airport.png'
+END
+
+SYMBOL
+  NAME 'airport gray'
+  TYPE pixmap
+  IMAGE 'airports/airport_gray.png'
+END
+
+SYMBOL
+  NAME 'airport small'
+  TYPE ellipse
+  POINTS 6 6 END
+END
+
+# small, filled circle
+SYMBOL
+  NAME 'circle'
+  TYPE ellipse
+  FILLED true
+  POINTS 1 1 END
+END
+
+# arrow
+SYMBOL
+  NAME 'arrow'
+  TYPE vector
+  FILLED false
+  POINTS
+    0 0
+    6 -14
+    1.5 -14
+    3 -38
+    -3 -38
+    -1.5 -14
+    -6 -14
+    0 0
+  END # POINTS
+END
